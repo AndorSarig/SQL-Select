@@ -1,0 +1,20 @@
+php sql.php --help
+
+php sql.php --select col1 --from table.csv --where 'col1=21'
+
+php sql.php --select '*' --from table.csv --sort-column col3 --sort-direction desc --sort-mode natural
+
+php sql.php --select '*' --from table.csv --multi-sort-col col2,col3 --multi-sort-dir asc,desc
+
+php sql.php --select '*' --from table.csv --unique col1
+
+php sql.php --select '*' --from table.csv --unique col1 --where 'col3<>val33'
+
+php sql.php --select '*' --from table.csv --column-sort desc
+
+php sql.php --select '*' --from table.csv --output csv --output-file testResult.csv
+
+php sql.php --select '*' --from table.csv --aggregate-sum col1
+
+php sql.php --select '*' --from table.csv --aggregate-list col1 --aggregate-list-glue .
+
