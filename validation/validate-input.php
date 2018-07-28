@@ -1,27 +1,53 @@
 <?php
 
-require 'constants.php';
 require 'input-validation/general-validation.php';
 require 'input-validation/specific-validation.php';
 require 'help-text.php';
+
+const VALIDATION_FLOW = array(
+    'emptyOptions',
+    'continueFlow',
+    'validateSpecificCases'
+);
 
 /**
  * Start options validation flow. Returns an array with errors if there are any.
  *
  * @param array $options
- * @return string
+ * @return array
  */
 
-function validateInput(array $options) : string{
+function validateInput(array $options) : array
+{
     if (isset($options["help"])) {
         return getHelpText($options["help"]);
     }
     $errors = [];
-    foreach (VALIDATION_FLOW as $functionToCall) {
-        $error = $functionToCall($options);
+    foreach (VALIDATION_FLOW as $stage) {
+        $error = startValidation($options, $stage);
         if (!empty($error)) {
-            array_push($errors, $error);
+            $errors += $error;
         }
     }
-    return implode(PHP_EOL, $errors);
+    return $errors;
+}
+
+/**
+ * Calls the appropiate function for the proper validation stage.
+ *
+ * @param array $options
+ * @param string $stage
+ * @return array
+ */
+
+function startValidation(array $options, string $stage) : array
+{
+    switch ($stage) {
+        case 'emptyOptions':
+            return checkForEmptyOptions($options);
+        case 'continueFlow':
+            return optionsValidationFlow($options);
+        case 'validateSpecificCases':
+            return specificOptionValidation($options);
+    }
 }

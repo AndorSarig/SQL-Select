@@ -53,9 +53,9 @@ define("HELP_TEXT", array(
  * @return string
  */
 
-function getHelpText($help) : string {
+function getHelpText($help) : array {
     if (empty($help)) {
-        return implode(PHP_EOL,HELP_TEXT);
+        return HELP_TEXT;
     }
     if (isset(HELP_TEXT[$help])) {
         return HELP_TEXT[$help];

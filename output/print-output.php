@@ -1,23 +1,13 @@
 <?php
 
 /**
- * Function to print error string.
- *
- * @param string $errors
- */
-
-function printErrors(string $errors) {
-    echo $errors . PHP_EOL;
-}
-
-/**
  * Function to decide where to print the output.
  *
  * @param array $result
  * @param array $options
  */
 
-function printResult(array $result, array $options)
+function printOutput(array $result, array $options)
 {
     if (!isset($options["output"]) || $options["output"] === "screen") {
         printJson($result);

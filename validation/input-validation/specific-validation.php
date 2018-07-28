@@ -1,24 +1,56 @@
 <?php
 
 /**
+ * Contains option names which requires some specific validations too.
+ */
+
+const SPECIFIC_OPTIONS = array(
+    "from",
+    "multi-sort",
+    "output",
+    "sort-column"
+);
+
+/**
  * Starts validation flow of all specific cases of options.
  *
  * @param array $options
- * @return string
+ * @return array
  */
 
-function specificOptionValidation(array $options) : string
+function specificOptionValidation(array $options) : array
 {
     $errors = [];
     foreach (SPECIFIC_OPTIONS as $option => $functionToCall) {
         if (isset($options[$option])) {
             $error = $functionToCall($options);
             if (!empty($error)) {
-                array_push($errors, $error);
+                $errors[$option] = $error;
             }
         }
     }
-    return implode(PHP_EOL, $errors);
+    return $errors;
+}
+
+/**
+ * Calls proper function for validating some options for specific cases.
+ *
+ * @param array $options
+ * @param string $option
+ * @return string
+ */
+
+function callSpecificValidatorForOption(array $options, string $option) : string {
+    switch($option) {
+        case 'from':
+            return validateFrom($options);
+        case 'multi-sort':
+            return validateMultiSort($options);
+        case 'output':
+            return validateOutput($options);
+        case 'sort-column':
+            return validateSort($options);
+    }
 }
 
 /**

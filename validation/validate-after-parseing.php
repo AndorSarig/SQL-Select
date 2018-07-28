@@ -26,7 +26,7 @@ define("OPTIONS_NEED_SPEC_VAL", array(
  * @return string
  */
 
-function validateAfterParsing(array $tableContent, array $columns, array $options) : string
+function validateAfterParsing(array $tableContent, array $columns, array $options) : array
 {
     $error = isTableCoherent($tableContent, count($columns));
     if (!empty($error)) {
@@ -36,7 +36,7 @@ function validateAfterParsing(array $tableContent, array $columns, array $option
     if (!empty($error)) {
         return $error;
     }
-    return '';
+    return [];
 }
 
 /**
@@ -47,14 +47,15 @@ function validateAfterParsing(array $tableContent, array $columns, array $option
  * @return string
  */
 
-function isTableCoherent(array $table, int $nrOfColumns) : string
+function isTableCoherent(array $table, int $nrOfColumns) : array
 {
+    $error = [];
     foreach ($table as $rowNr => $row) {
         if (count($row) !== $nrOfColumns) {
-            return "The table is not coherent! There is too much/few data in row nr $rowNr!";
+            $error["table"] = "The table is not coherent! There is too much/few data in row nr $rowNr!";
         }
     }
-    return '';
+    return $error;
 }
 
 /**
@@ -66,18 +67,18 @@ function isTableCoherent(array $table, int $nrOfColumns) : string
  * @return string
  */
 
-function validateColumnDependentOptions(array $columns, array $options) : string
+function validateColumnDependentOptions(array $columns, array $options) : array
 {
     $errors = [];
     foreach (OPTIONS_NEED_SPEC_VAL as $option => $functionToValidate) {
         if (isset($options[$option])) {
             $error =  OPTIONS_NEED_SPEC_VAL[$option]($options[$option], $columns);
             if (!empty($error)) {
-                array_push($errors, $error);
+                $errors[$option] = $error;
             }
         }
     }
-    return implode(PHP_EOL, $errors);
+    return $errors;
 }
 
 /**
@@ -109,7 +110,7 @@ function validateSelect(string $columnsGiven, array $columns) : string
 function validateWhere(string $condition, array $columns) : string
 {
     if (!preg_match('/^([^<>=]*)((?:(?:<>){1})|(?:<|>|=)){1}([^<>=]*)$/', $condition, $results)) {
-        return ["Value of --where option is not valid!"];
+        return "Value of --where option is not valid!";
     }
     return validateColumnsGivenForOptions($results[1], $columns);
 }
@@ -139,11 +140,10 @@ function validatePowerValue(string $colPower, array $columns) : string
 
 function validateColumnsGivenForOptions(string $columnsGiven, array $columns) : string
 {
-    $errors = [];
     foreach (explode(',', $columnsGiven) as $colName) {
         if (!in_array($colName, $columns)) {
-            array_push($errors, "Column name '$colName' given does not exist in table!");
+            return "Column name '$colName' given does not exist in table!";
         }
     }
-    return implode(PHP_EOL, $errors);
+    return '';
 }

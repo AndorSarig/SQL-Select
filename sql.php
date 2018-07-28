@@ -38,21 +38,21 @@ selectQuery();
 function selectQuery() : void
 {
     $options = getOptions();
-    $errors = validateInput($options);
-    if (!empty($errors)) {
-        printErrors($errors);
+    $errors["ERROR"] = validateInput($options);
+    if (!empty($errors["ERROR"])) {
+        printOutput($errors, $options);
         return;
     }
     $tableContent = readTableContent($options["from"]);
     $columns = getColumnsName($tableContent);
     $tableContent = getTableContent($tableContent, $columns);
-    $errors = validateAfterParsing($tableContent, $columns, $options);
-    if (!empty($errors)) {
-        printErrors($errors);
+    $errors["ERROR"] = validateAfterParsing($tableContent, $columns, $options);
+    if (!empty($errors["ERROR"])) {
+        printOutput($errors, $options);
         return;
     }
     $finalQuery = startQueryFlow($tableContent, $options, $columns);
-    printResult($finalQuery, $options);
+    printOutput($finalQuery, $options);
     return;
 }
 

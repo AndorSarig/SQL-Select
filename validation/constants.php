@@ -19,10 +19,7 @@ define("VALIDATE_OPTIONS", array(
     )
 ));
 
-define("VALIDATION_FLOW", array(
-    'checkForEmptyOptions',
-    'optionsValidationFlow',
-));
+
 
 define("SPECIFIC_OPTIONS", array(
     "from" => "validateFrom",
